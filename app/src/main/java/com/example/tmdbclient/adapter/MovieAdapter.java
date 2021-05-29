@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
@@ -19,7 +20,7 @@ import com.example.tmdbclient.model.Result;
 
 import java.util.ArrayList;
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
+public class MovieAdapter extends PagedListAdapter<Result, MovieAdapter.ViewHolder> {
 
     public interface ItemClickListener {
         void onItemClick(int position);
@@ -30,15 +31,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     }
 
     private Context context;
-    private ArrayList<Result> movieArrayList;
+//    private ArrayList<Result> movieArrayList;
     private ItemClickListener itemClickListener;
 
-    public MovieAdapter(Context context,
-                        ArrayList<Result> movieArrayList
+    public MovieAdapter(Context context
+//                        ArrayList<Result> movieArrayList
 //                        ItemClickListener itemClickListener
     ) {
+        super(Result.CALLBACK);
         this.context = context;
-        this.movieArrayList = movieArrayList;
+//        this.movieArrayList = movieArrayList;
 //        this.itemClickListener = itemClickListener;
     }
 
@@ -60,15 +62,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull MovieAdapter.ViewHolder holder, int position) {
-        Result movie = movieArrayList.get(position);
-
+//        Result movie = movieArrayList.get(position);
+        Result movie = getItem(position);
         holder.binding.setMovie(movie);
     }
 
-    @Override
-    public int getItemCount() {
-        return movieArrayList.size();
-    }
+//    @Override
+//    public int getItemCount() {
+//        return movieArrayList.size();
+//    }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         MovieListItemBinding binding;

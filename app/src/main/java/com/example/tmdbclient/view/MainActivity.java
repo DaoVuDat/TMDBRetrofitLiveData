@@ -3,6 +3,7 @@ package com.example.tmdbclient.view;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.paging.PagedList;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<Result> movies;
+    private PagedList<Result> movies;
     private RecyclerView recyclerView;
     private MovieAdapter movieAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -50,22 +51,27 @@ public class MainActivity extends AppCompatActivity {
     private void getPopularMovies() {
 
         // Observe Live Data
-        mainActivityViewModel.getAllMovies().observe(this, results -> {
-            movies = (ArrayList<Result>) results;
-            showOnRecyclerView();
-            swipeRefreshLayout.setRefreshing(false);
-        });
+//        mainActivityViewModel.getAllMovies().observe(this, results -> {
+//            movies = (ArrayList<Result>) results;
+//            showOnRecyclerView();
+//            swipeRefreshLayout.setRefreshing(false);
+//        });
 
+        mainActivityViewModel.getMoviesPagedList().observe(this, results -> {
+            movies = results;
+            showOnRecyclerView();
+        });
 
     }
 
     private void showOnRecyclerView() {
         recyclerView = binding.rvMovies;
 
-        movieAdapter = new MovieAdapter(this, movies);
+        movieAdapter = new MovieAdapter(this);
 //        movieAdapter = new MovieAdapter(this, movies, this);
         // Parse qua Constructor hoac setOnClickListener
         movieAdapter.setOnClickListener(this::onItemClick);
+        movieAdapter.submitList(movies);
 
 
         if(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
