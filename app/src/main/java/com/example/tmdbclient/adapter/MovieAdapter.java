@@ -1,4 +1,4 @@
-package com.example.tmdbclient.model;
+package com.example.tmdbclient.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,11 +8,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.bumptech.glide.Glide;
 import com.example.tmdbclient.R;
+import com.example.tmdbclient.databinding.MovieListItemBinding;
+import com.example.tmdbclient.model.Result;
 
 import java.util.ArrayList;
 
@@ -43,29 +46,23 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     @NonNull
     @Override
     public MovieAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_list_item, parent, false);
+//        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_list_item, parent, false);
 
-        return new ViewHolder(view);
+//        return new ViewHolder(view);
+        MovieListItemBinding movieListItemBinding = DataBindingUtil
+                .inflate(LayoutInflater.from(parent.getContext()),
+                        R.layout.movie_list_item,
+                        parent,
+                        false);
+
+        return new ViewHolder(movieListItemBinding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MovieAdapter.ViewHolder holder, int position) {
-        holder.movieTitle.setText(movieArrayList.get(position).getOriginalTitle());
-        holder.movieRating.setText(String.valueOf(movieArrayList.get(position).getVoteAverage()));
+        Result movie = movieArrayList.get(position);
 
-        String imagePath = "https://image.tmdb.org/t/p/w500" + movieArrayList.get(position).getPosterPath();
-
-        CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(context);
-        circularProgressDrawable.setStrokeWidth(5f);
-        circularProgressDrawable.setCenterRadius(30f);
-
-        circularProgressDrawable.start();
-
-        Glide.with(context)
-                .load(imagePath)
-                .placeholder(circularProgressDrawable)
-                .fitCenter()
-                .into(holder.movieImage);
+        holder.binding.setMovie(movie);
     }
 
     @Override
@@ -74,19 +71,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        MovieListItemBinding binding;
 
-        private TextView movieTitle;
-        private TextView movieRating;
-        private ImageView movieImage;
 
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
+        public ViewHolder(@NonNull MovieListItemBinding movieListItemBinding) {
+            super(movieListItemBinding.getRoot());
+            this.binding = movieListItemBinding;
 
-            movieTitle = itemView.findViewById(R.id.tvTitle);
-            movieRating = itemView.findViewById(R.id.tvRating);
-            movieImage = itemView.findViewById(R.id.ivMovie);
-
-            itemView.setOnClickListener(this);
+            movieListItemBinding.getRoot().setOnClickListener(this);
         }
 
         @Override

@@ -9,10 +9,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.tmdbclient.R;
+import com.example.tmdbclient.databinding.FragmentFirstBinding;
 import com.example.tmdbclient.model.Result;
 
 import java.text.NumberFormat;
@@ -20,36 +22,27 @@ import java.text.NumberFormat;
 public class FirstFragment extends Fragment {
 
     private Result movie;
-
-    private TextView movieTitle, movieSynopsis, movieRating, movieReleaseDate;
+    private FragmentFirstBinding binding;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_first, container, false);
 
-        View view = inflater.inflate(R.layout.fragment_first, container, false);
 
-        movieTitle = view.findViewById(R.id.tvMovieTitle);
-        movieSynopsis = view.findViewById(R.id.tvPlotsynopsis);
-        movieRating = view.findViewById(R.id.tvMovieRating);
-        movieReleaseDate = view.findViewById(R.id.tvReleaseDate);
 
         Intent intent = getActivity().getIntent();
         if (intent.hasExtra("movie")) {
             movie = intent.getParcelableExtra("movie");
-
-            movieTitle.setText(movie.getTitle());
-            movieSynopsis.setText(movie.getOverview());
-            movieRating.setText(String.valueOf(movie.getVoteAverage()));
-            movieReleaseDate.setText(movie.getReleaseDate());
+            binding.setMovie(movie);
         }
 
 
 
         // Inflate the layout for this fragment
-        return view;
+        return binding.getRoot();
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {

@@ -40,7 +40,7 @@ public class MovieRepository {
                     if(movieResponse != null && movieResponse.getResults() != null) {
                         movies = (ArrayList<Result>) movieResponse.getResults();
                         mutableLiveData.setValue(movies);
-//                        swipeRefreshLayout.setRefreshing(false);
+
                     }
 
                 } else {

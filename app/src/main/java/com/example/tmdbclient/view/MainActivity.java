@@ -1,6 +1,7 @@
 package com.example.tmdbclient.view;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -10,22 +11,14 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Toast;
 
 import com.example.tmdbclient.R;
-import com.example.tmdbclient.model.MovieAdapter;
-import com.example.tmdbclient.model.MovieResponse;
+import com.example.tmdbclient.adapter.MovieAdapter;
+import com.example.tmdbclient.databinding.ActivityMainBinding;
 import com.example.tmdbclient.model.Result;
-import com.example.tmdbclient.service.MovieAPIService;
-import com.example.tmdbclient.utils.MovieAPIUtils;
 import com.example.tmdbclient.viewmodel.MainActivityViewModel;
 
 import java.util.ArrayList;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private MovieAdapter movieAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private MainActivityViewModel mainActivityViewModel;
-
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +37,11 @@ public class MainActivity extends AppCompatActivity {
         setTitle("TMDB Popular Movies Today");
 
         mainActivityViewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         getPopularMovies();
 
-        swipeRefreshLayout = findViewById(R.id.swipe_layout);
+        swipeRefreshLayout = binding.swipeLayout;
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(this::getPopularMovies);
 
@@ -66,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showOnRecyclerView() {
-        recyclerView = findViewById(R.id.rvMovies);
+        recyclerView = binding.rvMovies;
 
         movieAdapter = new MovieAdapter(this, movies);
 //        movieAdapter = new MovieAdapter(this, movies, this);
